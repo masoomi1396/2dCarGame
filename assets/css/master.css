@@ -1,0 +1,101 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image:linear-gradient( 58.2deg,  rgba(40,91,212,0.73) -3%, rgba(171,53,163,0.45) 49.3%, rgba(255,204,112,0.37) 97.7% );
+}
+main{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-content: start;
+    overflow: hidden;
+}
+main>h1{
+    font-size: 20px;
+    font-family: 'Courier New', Courier, monospace;
+    color: aquamarine;
+    position: absolute;
+    top: 5%;
+    left: 5%;
+}
+main>section{
+    width: 100px;
+    height: 100vh;
+    background-image: url(../img/tunnel_road.jpg.preview.jpg);
+    background-position: bottom;
+    background-repeat: repeat-y;
+    animation-duration: 10s;
+    animation-iteration-count: infinite;
+    position: absolute;
+    animation-timing-function: linear;
+}
+main>section:first-of-type{
+    animation-name: backgroundAnimation_1;
+}
+main>section:last-of-type{
+    animation-name: backgroundAnimation_2;
+    position: absolute;
+    top: -100%;
+}
+main>div{
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+main>div:first-of-type{
+    
+    background-image: url(../img/pngwing.com.png); 
+    top: 80%;
+    transition: 0.9s;
+}
+main>div:last-of-type{
+    background-image: url(../img/enemyCar.png);
+    animation-timing-function: ease-in;
+    animation-iteration-count: infinite;
+    animation-name:enemyAnimation;
+}
+@keyframes backgroundAnimation_1 {
+    from{top:0}
+    to{top:100%}
+}
+@keyframes backgroundAnimation_2 {
+    from{top:-100%}
+    to{top: 0;}
+}
+@keyframes enemyAnimation {
+    0%{top:-5%}
+    100%{top: 101%;}
+}
+.looseBox{
+    width: 500px;
+    height: 500px;
+    display: flex;
+    justify-content: center;
+    align-items:center ;
+    backdrop-filter: blur(50px);
+    position: absolute;
+    color: black;
+}
+.looseBox>h2{
+    font-family:'Courier New', Courier, monospace;
+    font-size: 30px;
+    text-align: center;
+    transition: 0.4s;
+    z-index: 10;
+}
+.looseBox>h2:hover{
+    cursor: pointer;
+    scale: 2;
+}
