@@ -1,80 +1,117 @@
-const hero = document.getElementById('Hero');
-const enemy = document.getElementById('Enemy');
+const enemyCar = document.getElementById('Enemy');
+const heroCar = document.getElementById('Hero');
 const boardGame = document.getElementById('Board');
-let timeCounter = 0;
-let time = 0;
-let looseGameFlag = false;
-let flagRightEnemy = false;
-let flagRightHero = false;
-const gameInit = () => {
-    let positonX = Math.abs(hero.offsetLeft - enemy.offsetLeft);
-    let positonY = Math.abs(hero.offsetTop - enemy.offsetTop);
+const scoreGame = document.getElementById('Score');
 
-    if (enemy.offsetTop < 5 && timeCounter <= 0.5) {
-        enemyReady();
-    }
-    if ((flagRightEnemy == flagRightHero) && positonY <= 1) {
-        console.log("Postion X : " + positonX);
-        console.log("Postion Y : " + positonY);
-        console.log("You Loose");
-        looseGame();
-    }
+let gameOver;
+let flagRightHero;
+let flagRightEnemy;
+let timeGame;
+let speed;
+let basePostion;
+let gameDurationInProcess;
+let positoinX;
+let positoinY;
+
+const gameFirstInit = () => {
+    gameOver = false;
+    flagRightHero = true;
+    flagRightEnemy = false;
+    timeGame = 0;
+    speed = randomIntFromInterval(2, 6);
+    gameDurationInProcess = speed;
+    basePostion = parseInt(window.screen.width / 2);
+    getPositioStylenInit();
 }
-document.addEventListener("keydown", (event) => {
-    let name = event.key;
-    switch (name) {
-        case "ArrowRight":
-            hero.style.transform = "translateX(15px)";
-            flagRightHero = true;
-            break;
-        case "ArrowLeft":
-            flagRightHero = false;
-            hero.style.transform = "translateX(-15px)"
-            break;
-        default:
-            break;
-    }
-})
-const looseGame = () => {
-    const box = document.createElement('div');
-    const button = document.createElement('h2');
-    const text = document.createElement('h3');
-    button.innerText = "Restart";
-    box.classList = "looseBox";
-    button.addEventListener("click", () => {
-        location.reload();
-    })
-    looseGameFlag = true;
-    box.append(button);
-    boardGame.appendChild(box);
-    enemy.remove();
+const getPositioStylenInit = () => {
+    heroCar.style.left = basePostion + "px";
+    enemyCar.style.transform = "rotateX(180deg) translateX(-50%)";
+    enemyCar.style.left = basePostion + "px";
 }
-const enemyReady = () => {
+const moveOfEnemy = () => {
     const randomNumber = randomIntFromInterval(1, 2);
-    const speedOfEnemy = randomIntFromInterval(1, 6);
-    enemy.style.animationDuration = `${speedOfEnemy}s`;
-    timeCounter = speedOfEnemy;;
-    if (randomNumber == 1)
-    {
-        enemy.style.transform = "translateX(15px) rotateX(180deg)"
-        flagRightEnemy = true;
-    }       
-    else
-    {
-        flagRightEnemy = false;
-        enemy.style.transform = "translateX(-15px) rotateX(180deg)"
+    let enemyPosition = parseInt(enemyCar.style.left);
+    enemyCar.style.animationDuration = speed + "s";
+    if (randomNumber == 1) {
+        if (enemyPosition <= basePostion)
+            enemyPosition = moveRight();
+        console.log("Right : " + enemyPosition);
+        enemyCar.style.left = enemyPosition + "px";
     }
-        
+    else if (randomNumber == 2) {
+        if (enemyPosition >= basePostion)
+            enemyPosition = moveLeft();
+        console.log("Left : " + enemyPosition);
+        enemyCar.style.left = enemyPosition + "px";
+    }
+    else {
+        console.log("Erorr_1_Enemy");
+    }
 }
-const gameTime = () => {
-    time++;
-    document.getElementById('Score').innerText = `Score: ${time}`;
+const moveLeft = () => {
+    return basePostion - 17;
+}
+const moveRight = () => {
+    return basePostion + 17;
 }
 function randomIntFromInterval(min, max) {
     return Math.floor(Math.random() * (max - min + 1) + min)
 }
-if (looseGameFlag != true) {
-    setInterval(() => { gameTime() }, 1000);
-    setInterval(() => { timeCounter--; }, 990);
-    setInterval(() => { gameInit() }, 0);
+const looseGame = () => {
+    gameOver = true;
+
+    const div = document.createElement('div');
+    const score = document.createElement('h3');
+    const button = document.createElement('h2');
+
+    score.innerText = "Score : " + timeGame;
+    button.innerText = "Restart";
+    div.className = "looseBox";
+    scoreGame.innerText = "";
+
+    div.appendChild(score);
+    div.appendChild(button);
+    boardGame.appendChild(div);
+
+    enemyCar.remove();
+    button.addEventListener("click", () => {
+        location.reload();
+    })
+
 }
+const gameOverChecked = ()=>{
+    positoinX = Math.abs(parseInt(heroCar.offsetLeft) - parseInt(enemyCar.offsetLeft));
+    positoinY = Math.abs(heroCar.offsetTop - enemyCar.offsetTop);
+    if (positoinX < 5 && positoinY < 5) {
+        looseGame();
+    }
+}
+const updateEnemy = () => {
+    if (!gameOver) {
+        scoreGame.innerText = "Score: "+timeGame;
+        if (gameDurationInProcess <= 0) {
+            speed = randomIntFromInterval(2, 6);
+            gameDurationInProcess = speed;
+
+            moveOfEnemy();
+        }
+    }
+}
+gameFirstInit()
+setInterval(gameOverChecked,0)
+setInterval(() => {
+    
+    gameDurationInProcess--;
+    timeGame++;
+    document.addEventListener("keydown", (event) => {
+        if (event.key == 'ArrowLeft') {
+            heroCar.style.left = moveLeft() + "px";
+        }
+        if (event.key == 'ArrowRight') {
+            heroCar.style.left = moveRight() + "px";
+        }
+    })
+}, 1000);
+setInterval(() => {
+    updateEnemy();
+}, 0);
