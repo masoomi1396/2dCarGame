@@ -9,17 +9,31 @@ let flagRightEnemy;
 let timeGame;
 let speed;
 let basePostion;
-let gameDurationInProcess;
 let positoinX;
 let positoinY;
+let checkSpeed;
 
+const updateSpeed = ()=>{
+    if(checkSpeed == speed)
+    {
+        speed = randomIntFromInterval(2,6);
+        checkSpeed=0;
+        enemyCar.style.animationDuration = speed + "s";
+    }
+    else{
+        checkSpeed++;
+    }
+        
+
+}
 const gameFirstInit = () => {
     gameOver = false;
     flagRightHero = true;
     flagRightEnemy = false;
     timeGame = 0;
     speed = randomIntFromInterval(2, 6);
-    gameDurationInProcess = speed;
+    checkSpeed = 0;
+    enemyCar.style.animationDuration = "5s";
     basePostion = parseInt(window.screen.width / 2);
     getPositioStylenInit();
 }
@@ -31,7 +45,6 @@ const getPositioStylenInit = () => {
 const moveOfEnemy = () => {
     const randomNumber = randomIntFromInterval(1, 2);
     let enemyPosition = parseInt(enemyCar.style.left);
-    enemyCar.style.animationDuration = speed + "s";
     if (randomNumber == 1) {
         if (enemyPosition <= basePostion)
             enemyPosition = moveRight();
@@ -79,29 +92,32 @@ const looseGame = () => {
     })
 
 }
-const gameOverChecked = ()=>{
-    positoinX = Math.abs(parseInt(heroCar.offsetLeft) - parseInt(enemyCar.offsetLeft));
-    positoinY = Math.abs(heroCar.offsetTop - enemyCar.offsetTop);
-    if (positoinX < 5 && positoinY < 5) {
+function getPostion(Element){
+    const {top,left,width,height} = Element.getBoundingClientRect();
+    return {x: left+width/2,y:top+height/2};
+}
+const gameOverChecked = () => {
+    let positionHero = getPostion(heroCar);
+    let positionEnemy = getPostion(enemyCar);
+    if (Math.hypot(positionHero.x - positionEnemy.x,positionHero.y-positionEnemy.y) < 25) {
         looseGame();
     }
 }
 const updateEnemy = () => {
     if (!gameOver) {
-        scoreGame.innerText = "Score: "+timeGame;
-        if (gameDurationInProcess <= 0) {
-            speed = randomIntFromInterval(2, 6);
-            gameDurationInProcess = speed;
-
-            moveOfEnemy();
-        }
+        scoreGame.innerText = "Score: " + timeGame;
+        speed = randomIntFromInterval(2, 6);
+        moveOfEnemy();
     }
 }
+const updateUpdate = () =>{
+
+}
 gameFirstInit()
-setInterval(gameOverChecked,0)
+setInterval(gameOverChecked, 0);
+setInterval(updateSpeed,1000);
 setInterval(() => {
-    
-    gameDurationInProcess--;
+    gameOverChecked();
     timeGame++;
     document.addEventListener("keydown", (event) => {
         if (event.key == 'ArrowLeft') {
@@ -113,5 +129,6 @@ setInterval(() => {
     })
 }, 1000);
 setInterval(() => {
+    gameOverChecked();
     updateEnemy();
-}, 0);
+}, 1000);

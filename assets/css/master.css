@@ -64,7 +64,7 @@ main>div:first-of-type{
 }
 main>div:last-of-type{
     background-image: url(../img/enemyCar.png);
-    animation-timing-function: ease-in;
+    animation-timing-function: linear;
     animation-iteration-count: infinite;
     animation-name:enemyAnimation;
 }
@@ -77,12 +77,12 @@ main>div:last-of-type{
     to{top: 0;}
 }
 @keyframes enemyAnimation {
-    0%{top:-5%}
-    100%{top: 101%;}
+    0%{top:0%}
+    100%{top: 100%;}
 }
 .looseBox{
-    width: 500px;
-    height: 500px;
+    width: 50%;
+    height: 50%;
     display: flex;
     justify-content: center;
     align-items:center ;
@@ -93,11 +93,11 @@ main>div:last-of-type{
 }
 .looseBox>h3{
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;;
-    font-size: 50px;
+    font-size: 30px;
 }
 .looseBox>h2{
     font-family:'Courier New', Courier, monospace;
-    font-size: 30px;
+    font-size: 20px;
     text-align: center;
     transition: 0.4s;
     z-index: 10;
