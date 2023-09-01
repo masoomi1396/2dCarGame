@@ -86,7 +86,7 @@ const looseGame = () => {
     div.appendChild(button);
     boardGame.appendChild(div);
 
-    enemyCar.remove();
+    enemyCar.style.display="none";
     button.addEventListener("click", () => {
         location.reload();
     })
@@ -99,9 +99,13 @@ function getPostion(Element){
 const gameOverChecked = () => {
     let positionHero = getPostion(heroCar);
     let positionEnemy = getPostion(enemyCar);
+    // positoinX = Math.abs(heroCar.offsetLeft - enemyCar.offsetLeft);
+    // positoinY = Math.abs(heroCar.offsetTop - enemyCar.offsetTop);
     if (Math.hypot(positionHero.x - positionEnemy.x,positionHero.y-positionEnemy.y) < 25) {
         looseGame();
     }
+    if(positoinX < 5 && positoinY < 5)
+        looseGame();
 }
 const updateEnemy = () => {
     if (!gameOver) {
